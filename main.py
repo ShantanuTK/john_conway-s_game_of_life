@@ -60,8 +60,8 @@ playButton = Button(mainWindow, colours.BUTTON, 50, BUTTON_Y, BUTTON_WIDTH, BUTT
 pauseButton = Button(mainWindow, colours.BUTTON, (WIDTH / 2 - BUTTON_WIDTH / 2), BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, 'Pause', gameFont, pause_game)
 resetButton = Button(mainWindow, colours.BUTTON, 500, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, 'Reset', gameFont, reset_grid)
 
-
-def get_events():
+#-------------------------------------------------- SETTING FUNCTIONS ----------------------------------------------------#
+def settings_get_events():
     global run
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -82,35 +82,102 @@ def get_events():
                 if resetButton.mouse_hovering(pos):
                     resetButton.on_click()
 
-def draw():
+def settings_draw():
     mainWindow.fill(colours.BACKGROUND)
     gridWindow.draw()
     playButton.draw()
     pauseButton.draw()
     resetButton.draw()
 
-def update():
+def settings_update():
     # gridWindow.update()
     pygame.display.update()
 
-def playing_update():
+#-------------------------------------------------- PAUSE FUNCTIONS ----------------------------------------------------#
+
+def pause_get_events():
+    global run
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+            pygame.quit()
+            sys.exit()
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:  # Activate one cell condition
+        # if pygame.mouse.get_pressed()[0]:   # Activate multiple cell condition
+            pos = pygame.mouse.get_pos()
+            if cursor_on_grid(pos):
+                gridWindow.click_cell(pos)
+            else:
+                if playButton.mouse_hovering(pos):
+                    playButton.on_click()
+                if pauseButton.mouse_hovering(pos):
+                    pauseButton.on_click()
+                if resetButton.mouse_hovering(pos):
+                    resetButton.on_click()
+
+def pause_draw():
+    mainWindow.fill(colours.BACKGROUND)
+    gridWindow.draw()
+    playButton.draw()
+    pauseButton.draw()
+    resetButton.draw()
+
+def pause_update():
+    # gridWindow.update()
+    pygame.display.update()
+
+
+#-------------------------------------------------- PLAY FUNCTIONS ----------------------------------------------------#
+
+def play_get_events():
+    global run
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+            pygame.quit()
+            sys.exit()
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:  # Activate one cell condition
+        # if pygame.mouse.get_pressed()[0]:   # Activate multiple cell condition
+            pos = pygame.mouse.get_pos()
+            if cursor_on_grid(pos):
+                gridWindow.click_cell(pos)
+            else:
+                if playButton.mouse_hovering(pos):
+                    playButton.on_click()
+                if pauseButton.mouse_hovering(pos):
+                    pauseButton.on_click()
+                if resetButton.mouse_hovering(pos):
+                    resetButton.on_click()
+
+def play_draw():
+    mainWindow.fill(colours.BACKGROUND)
+    gridWindow.draw()
+    playButton.draw()
+    pauseButton.draw()
+    resetButton.draw()
+
+def play_update():
     # gridWindow.update()
     gridWindow.conway()
     pygame.display.update()
 
+#-------------------------------------------------- GAME LOOP ----------------------------------------------------#
+
 while run:
     if state == "setting":
-        get_events()
-        draw()
-        update()
+        settings_get_events()
+        settings_draw()
+        settings_update()
     if state == "play":
-        get_events()
-        draw()
-        playing_update()
+        play_get_events()
+        play_draw()
+        play_update()
     if state == "pause":
-        get_events()
-        draw()
-        update()
+        pause_get_events()
+        pause_draw()
+        pause_update()
 
     # print(state)
     clock.tick(FPS // 6)
